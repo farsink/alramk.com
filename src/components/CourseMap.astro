@@ -1,0 +1,487 @@
+---
+import Icon from './Icon.astro';
+
+// Example race: three loops, all starting and ending at the same ride base,
+// each loop followed by a 40-minute vet-gate hold. Geometry in the SVG below
+// is data-driven, so changing the constants re-lays the whole map.
+const loopList = [
+  { key: 'loop-1', label: 'LOOP 1', km: 38, r: 170, color: 'var(--gold-500)' },
+  { key: 'loop-2', label: 'LOOP 2', km: 26, r: 116, color: 'var(--gold-700)' },
+  { key: 'loop-3', label: 'LOOP 3', km: 20, r: 90, color: 'var(--espresso-700)' },
+];
+const HOLD_MIN = 40;
+const HOLD_S = 1.1; // visual seconds for one hold
+const SECONDS_PER_KM = 0.07; // visual pacing only
+const PX_PER_SECOND = 98;
+
+const bp = { x: 500, y: 500 };
+const ring = (r: number) => `M ${bp.x} ${bp.y} A ${r} ${r} 0 0 1 ${bp.x} ${bp.y - 2 * r} A ${r} ${r} 0 0 1 ${bp.x} ${bp.y}`;
+// stages in race order; loop segments sized by km so the bar is distance-proportional
+const stages = [
+  { key: 'start', label: 'Start', meta: 'base', seconds: 0.5, kind: 'base' },
+  { key: 'loop-1', label: 'Loop 1', meta: '38 km', seconds: 38 * SECONDS_PER_KM, kind: 'loop' },
+  { key: 'hold-1', label: 'Vet hold', meta: '40 min', seconds: HOLD_S, kind: 'hold' },
+  { key: 'loop-2', label: 'Loop 2', meta: '26 km', seconds: 26 * SECONDS_PER_KM, kind: 'loop' },
+  { key: 'hold-2', label: 'Vet hold', meta: '40 min', seconds: HOLD_S, kind: 'hold' },
+  { key: 'loop-3', label: 'Loop 3', meta: '20 km', seconds: 20 * SECONDS_PER_KM, kind: 'loop' },
+  { key: 'finish', label: 'Finish', meta: 'at base', seconds: 0.7, kind: 'base' },
+].map((s) => ({ ...s, width: Math.max(52, Math.round(s.seconds * PX_PER_SECOND)) }));
+const barWidth = stages.reduce((sum, s) => sum + s.width + 3, -3);
+---
+
+<section
+  class="course-map"
+  data-course
+  data-stages={JSON.stringify(stages.map((s) => ({ key: s.key, seconds: s.seconds })))}
+  role="region"
+  aria-label="Example race course map"
+>
+  <svg viewBox="0 0 1000 620" role="img" aria-labelledby="cm-title cm-desc">
+    <title id="cm-title">Example endurance course: three loops around one ride base</title>
+    <desc id="cm-desc">Three loops of 38, 26 and 20 kilometres start and end at the ride base, where the horse is held 40 minutes for a veterinary inspection after each loop. The final loop ends at the finish at the base.</desc>
+
+    <!-- loops, sized by distance and meeting the base at one shared point -->
+    {loopList.map((l) => (
+      <path
+        id={`cm-${l.key}`}
+        class="cm-loop"
+        data-loop={l.key}
+        style={`stroke:${l.color}`}
+        d={ring(l.r)}
+        fill="none"
+      />
+    ))}
+
+    {loopList.map((l) => (
+      <g class="cm-loop-badge">
+        <circle cx={bp.x} cy={bp.y - 2 * l.r} r="10" style={`fill:${l.color}`} />
+        <text x={bp.x} y={bp.y - 2 * l.r + 4} class="cm-loop-badge__n">{l.label.slice(-1)}</text>
+      </g>
+    ))}
+
+    <!-- loop legend -->
+    <g class="cm-legend">
+      <rect x="36" y="46" width="216" height="104" rx="10" />
+      {loopList.map((l, i) => (
+        <g>
+          <line x1="52" y1={74 + i * 32} x2="82" y2={74 + i * 32} style={`stroke:${l.color}`} />
+          <text x="92" y={79 + i * 32}>{l.label} · {l.km} KM</text>
+        </g>
+      ))}
+    </g>
+
+    <!-- shown only during vet holds -->
+    <g id="cm-hold" opacity="0">
+      <rect x="394" y="206" width="212" height="30" rx="15" />
+      <text x="500" y="226">VET GATE · {HOLD_MIN} MIN HOLD</text>
+    </g>
+
+    <!-- the ride base: start, vet gate and finish share this point -->
+    <g class="cm-base">
+      <title>Every loop begins and ends here: arrival, vet inspection and a 40-minute hold, then out again on the next loop. The final loop ends at the finish.</title>
+      <circle id="cm-hold-pulse" cx={bp.x} cy={bp.y} r="14" fill="none" />
+      <rect x="375" y="506" width="250" height="40" rx="9" />
+      <text x="500" y="531">START · VET GATE · FINISH</text>
+    </g>
+
+    <g id="cm-rider">
+      <circle r="13" />
+      <g transform="translate(-10,-10) scale(0.83)">
+        <path d="M5 21v-4c0-3 2-5 5-6l1-3 2-2 2 2v2l3 2v5h-3l-1 4" />
+        <path d="M16 8h.01" />
+        <path d="M8 14l-3 2" />
+      </g>
+    </g>
+  </svg>
+
+  <!-- distance-proportional stage timeline: click a segment to jump there -->
+  <div class="course-map__scroller">
+    <div class="course-map__align">
+      <div class="course-map__progress" style={`width:${barWidth}px`}>
+        <span id="cm-progress-fill"></span>
+      </div>
+      <div class="course-map__stages" role="group" aria-label="Race stages">
+        {stages.map((s) => (
+          <button
+            type="button"
+            class={`cm-stage cm-stage--${s.kind}`}
+            data-stage={s.key}
+            style={`width:${s.width}px`}
+            aria-pressed="false"
+          >
+            <strong>{s.label}</strong>
+            <span>{s.meta}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div class="course-map__controls">
+    <input id="cm-scrub" type="range" min="0" max="1" step="0.001" value="0" aria-label="Scrub race progress" />
+    <button type="button" id="cm-play" class="cm-btn" aria-label="Play race animation">Play</button>
+    <button type="button" id="cm-replay" class="cm-btn cm-btn--ghost" aria-label="Replay race animation">Replay</button>
+  </div>
+
+  <p><Icon name="loop" size={18} /> Example sequence only. Actual loops and timing points are configured per race.</p>
+</section>
+
+<!-- rider rides each loop with GSAP MotionPath; pauses at the vet gate -->
+<script>
+  import gsap from 'gsap';
+  import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+
+  gsap.registerPlugin(MotionPathPlugin);
+
+  const root = document.querySelector<HTMLElement>('[data-course]');
+  if (!root) throw new Error('course map missing');
+
+  // stage seconds come from the rendered markup so pacing cannot drift from the map
+  const stageData = JSON.parse(root.dataset.stages ?? '[]') as { key: string; seconds: number }[];
+  const secondsFor = (key: string) => stageData.find((s) => s.key === key)?.seconds ?? 0;
+  // stage key -> which loop ring is highlighted while that stage runs
+  const ringOfStage: Record<string, number> = {
+    start: -1, 'loop-1': 0, 'hold-1': 0, 'loop-2': 1, 'hold-2': 1, 'loop-3': 2, finish: 2,
+  };
+  const stageOrder = stageData.map((s) => s.key);
+  const rider = root.querySelector('#cm-rider');
+  const pulse = root.querySelector('#cm-hold-pulse');
+  const holdCallout = root.querySelector('#cm-hold');
+  const fill = root.querySelector<HTMLElement>('#cm-progress-fill');
+  const scrub = root.querySelector<HTMLInputElement>('#cm-scrub');
+  const playBtn = root.querySelector<HTMLButtonElement>('#cm-play');
+  const replayBtn = root.querySelector<HTMLButtonElement>('#cm-replay');
+  const chips = Array.from(root.querySelectorAll<HTMLButtonElement>('.cm-stage'));
+  const rings = Array.from(root.querySelectorAll<SVGPathElement>('.cm-loop'));
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
+  const ride = (loopKey: string) =>
+    tl.to(rider, {
+      motionPath: { path: `#cm-${loopKey}`, align: `#cm-${loopKey}`, alignOrigin: [0.5, 0.5] },
+      duration: secondsFor(loopKey),
+    });
+
+  tl.addLabel('start');
+  tl.to({}, { duration: secondsFor('start') });
+
+  const holdAt = (label: string) => {
+    tl.addLabel(label);
+    const holdS = secondsFor(label);
+    tl.to({}, { duration: holdS }, label);
+    tl.fromTo(holdCallout, { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: 0.2 }, `${label}+=0.05`);
+    tl.fromTo(holdCallout, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.2, immediateRender: false }, `${label}+=${holdS - 0.25}`);
+    tl.fromTo(
+      pulse,
+      { attr: { r: 14 }, autoAlpha: 0.85 },
+      { attr: { r: 30 }, autoAlpha: 0, duration: 0.33, repeat: 2, immediateRender: false },
+      label
+    );
+  };
+
+  const loopCount = rings.length;
+  for (let i = 1; i < loopCount; i++) {
+    tl.addLabel(`loop-${i}`);
+    ride(`loop-${i}`);
+    holdAt(`hold-${i}`);
+  }
+  tl.addLabel(`loop-${loopCount}`);
+  ride(`loop-${loopCount}`);
+  tl.addLabel('finish');
+  tl.to({}, { duration: secondsFor('finish') });
+
+  gsap.set(rider, { x: 500, y: 500 });
+
+  // stage detection from the timeline playhead
+  const labels = tl.labels as Record<string, number>;
+  const boundaries = stageOrder.map((key) => ({ key, t: labels[key] ?? 0 }));
+  for (let i = 0; i < boundaries.length - 1; i++) {
+    (boundaries[i] as { to: number }).to = boundaries[i + 1].t;
+  }
+  (boundaries[boundaries.length - 1] as { to: number }).to = tl.duration();
+
+  const ringFor = (key: string) => ringOfStage[key] ?? -1;
+  let activeStage = '';
+  let pressed = false;
+  let rangeValue = 0;
+
+  const setActive = (key: string) => {
+    if (key === activeStage) return;
+    activeStage = key;
+    chips.forEach((chip) => {
+      const on = chip.dataset.stage === key;
+      chip.classList.toggle('is-active', on);
+      if (chip.getAttribute('aria-pressed') !== String(on)) chip.setAttribute('aria-pressed', String(on));
+    });
+    const ringIndex = ringFor(key);
+    rings.forEach((ring, i) => ring.classList.toggle('is-active', i === ringIndex));
+  };
+
+  const update = () => {
+    const halo = tl.time();
+    const stage = boundaries.find((b) => halo < b.to) ?? boundaries[boundaries.length - 1];
+    setActive(stage.key);
+    const p = tl.progress();
+    if (fill) fill.style.width = `${(p * 100).toFixed(2)}%`;
+    if (scrub && !pressed) {
+      rangeValue = p;
+      scrub.value = String(p);
+    }
+    if (playBtn) playBtn.textContent = tl.isActive() ? 'Pause' : 'Play';
+  };
+  tl.eventCallback('onUpdate', update);
+  tl.eventCallback('onComplete', () => tl.pause());
+
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      const key = chip.dataset.stage ?? '';
+      const b = boundaries.find((b) => b.key === key);
+      if (!b) return;
+      tl.seek(b.t + 0.001, false, false);
+      tl.play();
+    })
+  );
+
+  let scrubbing = false;
+  scrub?.addEventListener('input', () => {
+    scrubbing = true;
+    tl.progress(Number(scrub.value));
+  });
+  scrub?.addEventListener('pointerdown', () => (scrubbing = true));
+  window.addEventListener(
+    'pointerup',
+    () => {
+      scrubbing = false;
+    },
+    { passive: true }
+  );
+
+  playBtn?.addEventListener('click', () => (tl.isActive() ? tl.pause() : tl.play(tl.progress() >= 1 ? 'start' : undefined)));
+  replayBtn?.addEventListener('click', () => {
+    tl.restart();
+  });
+
+  if (!reduce && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          tl.play();
+          io.disconnect();
+        }
+      },
+      { threshold: 0.4 }
+    );
+    io.observe(root);
+  }
+  update();
+</script>
+
+<style lang="css">
+  .course-map {
+    padding: 26px;
+    border: 1px solid var(--line);
+    background: var(--cream-50);
+  }
+  .course-map svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .cm-loop {
+    stroke-width: 2.5;
+    transition: stroke-width 0.3s ease;
+  }
+  .cm-loop.is-active {
+    stroke-width: 5.5;
+  }
+  .cm-loop-badge__n {
+    fill: var(--cream-50);
+    font: 700 11px 'DM Sans Variable', sans-serif;
+    text-anchor: middle;
+  }
+  .cm-legend rect {
+    fill: var(--cream-50);
+    stroke: var(--line);
+  }
+  .cm-legend line {
+    stroke-width: 4;
+    stroke-linecap: round;
+  }
+  .cm-legend text {
+    fill: var(--espresso-700);
+    font: 700 14px 'DM Sans Variable', sans-serif;
+    letter-spacing: 0.06em;
+  }
+  .cm-loop-badge__n,
+  .cm-legend text,
+  .cm-base text {
+    pointer-events: none;
+  }
+  .cm-base rect {
+    fill: var(--espresso-900);
+  }
+  .cm-base text {
+    fill: var(--cream-50);
+    font: 700 14.5px 'DM Sans Variable', sans-serif;
+    letter-spacing: 0.05em;
+    text-anchor: middle;
+  }
+  #cm-hold rect {
+    fill: var(--espresso-900);
+  }
+  #cm-hold text {
+    fill: var(--gold-500);
+    font: 700 13px 'DM Sans Variable', sans-serif;
+    letter-spacing: 0.12em;
+    text-anchor: middle;
+  }
+  #cm-hold-pulse {
+    stroke: var(--gold-500);
+    stroke-width: 3;
+  }
+  #cm-rider circle {
+    fill: var(--gold-500);
+    stroke: var(--cream-50);
+    stroke-width: 3;
+  }
+  #cm-rider path {
+    fill: none;
+    stroke: var(--espresso-900);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+  #cm-rider {
+    pointer-events: none;
+  }
+
+  /* stage bar: segment widths are distance-proportional */
+  .course-map__scroller {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    margin-top: 4px;
+  }
+  .course-map__align {
+    width: fit-content;
+    min-width: 100%;
+  }
+  .course-map__progress {
+    position: relative;
+    height: 4px;
+    background: var(--cream-200);
+    border-radius: 2px;
+    margin-bottom: 3px;
+  }
+  #cm-progress-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0;
+    background: var(--gold-500);
+    border-radius: 2px;
+  }
+  .course-map__stages {
+    display: flex;
+    gap: 3px;
+    min-width: 100%;
+  }
+  .cm-stage {
+    flex: none;
+    display: grid;
+    align-content: center;
+    gap: 2px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    background: var(--cream-50);
+    color: var(--espresso-700);
+    font: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+  }
+  .cm-stage strong {
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+  }
+  .cm-stage span {
+    font-size: 0.72rem;
+    color: var(--gold-700);
+  }
+  .cm-stage--base {
+    display: grid;
+    align-content: center;
+  }
+  .cm-stage--hold {
+    border-style: dashed;
+    background: repeating-linear-gradient(45deg, transparent 0 6px, rgba(199, 156, 101, 0.22) 6px 12px), var(--cream-50);
+  }
+  .cm-stage:hover {
+    border-color: var(--gold-700);
+  }
+  .cm-stage.is-active {
+    background: var(--espresso-900);
+    border-color: var(--espresso-900);
+  }
+  .cm-stage.is-active strong {
+    color: var(--gold-500);
+  }
+  .cm-stage.is-active span {
+    color: var(--cream-50);
+  }
+
+  .course-map__controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 14px;
+  }
+  #cm-scrub {
+    flex: 1;
+    accent-color: var(--gold-700);
+  }
+  .cm-btn {
+    padding: 9px 18px;
+    border: 1px solid var(--espresso-900);
+    background: var(--espresso-900);
+    color: var(--cream-50);
+    font: 700 0.78rem 'DM Sans Variable', sans-serif;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+  }
+  .cm-btn:hover {
+    background: var(--espresso-700);
+    border-color: var(--espresso-700);
+  }
+  .cm-btn--ghost {
+    background: transparent;
+    color: var(--espresso-700);
+    border-color: var(--line);
+  }
+  .cm-btn--ghost:hover {
+    background: var(--cream-200);
+    color: var(--espresso-900);
+  }
+  .course-map > p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    margin: 14px 0 0;
+    font-size: 0.85rem;
+  }
+  .course-map > p svg {
+    color: var(--gold-700);
+  }
+
+  @media (max-width: 680px) {
+    .course-map {
+      padding: 14px;
+    }
+    .course-map__controls {
+      flex-wrap: wrap;
+    }
+    #cm-scrub {
+      flex-basis: 100%;
+      order: 2;
+    }
+  }
+</style>

@@ -1,0 +1,91 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import AppScreen from '../components/AppScreen.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+import { features, appScreens, resultData, faqs } from '../data/site';
+import { images, featureImageKeys } from '../data/media';
+---
+
+<BaseLayout title="Race Timing & Endurance Software Features | Al-Ramk" description="Explore Al-Ramk endurance race timing, Active Transponder 3D, GPS and heart-rate monitoring, real-time reports, and mobile app." currentPath="/features/">
+  <PageHero eyebrow="The Platform" title="Every gate. Every loop. Every result." lead="Timing, tracking, veterinary insight, and live results — designed as one system for endurance racing." asideTitle="Six capabilities" asideText="From race timing hardware to results in the Al-Ramk app." />
+  <nav class="feature-anchor-nav" aria-label="Feature sections"><div class="container">{features.map((feature) => <a href={`#${feature.id}`}>{feature.title}<span aria-hidden="true">↘</span></a>)}</div></nav>
+  <div class="feature-sections">
+    {features.map((feature, index) => {
+      const image = images[featureImageKeys[feature.id]];
+      return <section id={feature.id} class:list={['feature-detail section', index % 2 === 1 && 'feature-detail--reverse', index % 2 === 0 && 'section--cream']}>
+        <div class="container feature-detail__grid">
+          <div class="feature-detail__visual" data-reveal>
+            <Image src={image} alt={feature.imageAlt ?? ''} widths={[400, 650, 900]} sizes="(max-width: 680px) 100vw, 46vw" loading="lazy" />
+            <span class="feature-detail__number" aria-hidden="true">0{index + 1}</span>
+          </div>
+          <div class="feature-detail__copy">
+            <span class="eyebrow"><Icon name={feature.icon} size={19} /> {feature.eyebrow}</span>
+            <h2>{feature.title}</h2>
+            <p class="lead">{feature.body}</p>
+            <ul>{feature.bullets.map((bullet) => <li><Icon name="check" size={18} />{bullet}</li>)}</ul>
+          </div>
+        </div>
+      </section>;
+    })}
+  </div>
+
+  <section class="section app-gallery-section">
+    <div class="container">
+      <SectionHeading eyebrow="Inside the Al-Ramk app" title="Race data, clearly presented." lead="These are real screens from the app listing. They show the information available to follow a race and review its results." align="center" />
+      <div class="app-gallery">
+        {appScreens.map((screen) => <AppScreen imageKey={screen.key} title={screen.title} caption={screen.caption} alt={screen.alt} theme="light" />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="result-band section dark">
+    <div class="container">
+      <SectionHeading eyebrow="Inside the results" title="The detail behind every standing." lead="A quick view of status, arrival, speed, and the heart-rate and recovery information recorded at the gate." />
+      <div class="result-grid">
+        {resultData.map((item, index) => <article data-reveal style={`--reveal-delay:${index * 80}ms`}><span>0{index + 1}</span><h3>{item.title}</h3><p>{item.text}</p></article>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream">
+    <div class="container feature-faq"><SectionHeading eyebrow="Good to know" title="A few useful details." /><Faq items={faqs} /></div>
+  </section>
+  <CtaBand title="See what the system can do for your race." text="Tell us about your venue, timing points, and event needs." />
+</BaseLayout>
+
+<style>
+.feature-anchor-nav { position: sticky; z-index: 20; top: calc(var(--header-height) + 44px); border-bottom: 1px solid var(--line); background: rgba(250,248,248,.97); backdrop-filter: blur(10px); }
+.feature-anchor-nav .container { display: flex; gap: 8px; overflow-x: auto; padding-block: 12px; scrollbar-width: thin; }
+.feature-anchor-nav a { display: inline-flex; flex: 0 0 auto; min-height: 42px; align-items: center; gap: 10px; padding: 8px 14px; border: 1px solid var(--line); font-size: .78rem; font-weight: 600; }
+.feature-anchor-nav a:hover { color: var(--gold-700); border-color: var(--gold-700); }
+.feature-anchor-nav span { color: var(--gold-700); }
+.feature-detail { scroll-margin-top: 190px; }
+.feature-detail__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem, 7vw, 7rem); align-items: center; }
+.feature-detail--reverse .feature-detail__visual { order: 2; }
+.feature-detail__visual { position: relative; min-height: 410px; background: var(--cream-50); }
+.feature-detail__visual img { width: 100%; height: 410px; object-fit: cover; }
+.feature-detail__number { position: absolute; right: -16px; bottom: -24px; padding: 10px 20px; color: var(--gold-700); background: var(--cream-50); font-family: 'Cinzel Variable', serif; font-size: 3.5rem; line-height: 1; }
+.feature-detail__copy h2 { margin-bottom: 18px; }
+.feature-detail__copy .lead { font-size: 1rem; }
+.feature-detail__copy ul { display: grid; gap: 11px; margin: 26px 0 0; padding: 0; list-style: none; }
+.feature-detail__copy li { display: flex; align-items: center; gap: 12px; font-size: .92rem; }
+.feature-detail__copy li svg { flex: 0 0 auto; color: var(--gold-700); }
+.app-gallery { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 20px; align-items: end; }
+.app-gallery .app-screen__phone { max-width: 220px; border-width: 6px; border-radius: 24px; }
+.app-gallery .app-screen figcaption { font-size: .78rem; }
+.result-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); border-top: 1px solid #594f47; }
+.result-grid article { padding: 28px 24px 10px 0; border-right: 1px solid #594f47; }
+.result-grid article:not(:first-child) { padding-left: 24px; }
+.result-grid article:last-child { border-right: 0; }
+.result-grid article > span { color: var(--gold-500); font-family: 'Cinzel Variable',serif; font-size: 2.4rem; }
+.result-grid h3 { margin: 18px 0 8px; font-size: 1.18rem; }
+.result-grid p { font-size: .9rem; }
+.feature-faq { display: grid; grid-template-columns: .7fr 1.3fr; gap: 60px; }
+@media(max-width:980px){.feature-detail__grid{grid-template-columns:1fr;gap:32px}.feature-detail--reverse .feature-detail__visual{order:0}.feature-detail__visual,.feature-detail__visual img{min-height:340px;height:340px}.app-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}.result-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.result-grid article:nth-child(2){border-right:0}.result-grid article:nth-child(n+3){border-top:1px solid #594f47}.result-grid article:nth-child(3){padding-left:0}.feature-faq{grid-template-columns:1fr;gap:20px}}
+@media(max-width:680px){.feature-anchor-nav .container{width:100%;padding-inline:16px}.feature-detail__visual,.feature-detail__visual img{min-height:280px;height:280px}.feature-detail__number{right:-4px;bottom:-12px;font-size:2.5rem}.app-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 12px}.app-gallery .app-screen__phone{border-width:5px;border-radius:20px}.result-grid{grid-template-columns:1fr}.result-grid article,.result-grid article:not(:first-child){padding:20px 0;border-right:0;border-bottom:1px solid #594f47}.result-grid article:last-child{border-bottom:0}}
+</style>

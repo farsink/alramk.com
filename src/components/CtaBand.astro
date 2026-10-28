@@ -1,0 +1,16 @@
+---
+import Button from './Button.astro';
+interface Props { title?: string; text?: string; label?: string; href?: string; }
+const { title = "Let's talk about your next event.", text = 'Tell us about the race you are planning.', label = 'Request a Demo', href = '/contact/' } = Astro.props;
+---
+
+<section class="cta-band dark">
+  <div class="container cta-band__inner">
+    <div>
+      <span class="eyebrow">Your next race</span>
+      <h2>{title}</h2>
+      <p>{text}</p>
+    </div>
+    <Button href={href}>{label}</Button>
+  </div>
+</section>

@@ -1,0 +1,174 @@
+---
+import { nav, contact, features } from '../data/site';
+import AppBadge from './AppBadge.astro';
+import Icon from './Icon.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__brand">
+      <a class="footer-brand" href="/" aria-label="Al-Ramk home">
+        <img src="/brand/al-ramk-icon.png" width="46" height="46" alt="" />
+        <span>Al-Ramk</span>
+      </a>
+      <p>Precision timing, live results, and veterinary insight for endurance horse racing.</p>
+      <div class="app-badges">
+        <AppBadge store="play" />
+        <AppBadge store="apple" />
+      </div>
+    </div>
+
+    <div class="site-footer__col">
+      <h2 class="footer-title">
+        <Icon name="horse" size={18} />
+        Explore
+      </h2>
+      <ul>
+        {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </div>
+
+    <div class="site-footer__col">
+      <h2 class="footer-title">
+        <Icon name="horse" size={18} />
+        Capabilities
+      </h2>
+      <ul>
+        {features.map((feature) => (
+          <li><a href={`/features/#${feature.id}`}>{feature.title}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="site-footer__col site-footer__contact">
+      <h2 class="footer-title">
+        <Icon name="horse" size={18} />
+        Contact
+      </h2>
+      <address>
+        <span>{contact.name}</span>
+        <span>{contact.role}</span>
+        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+        <a href={`tel:${contact.phoneHref}`}>{contact.phone}</a>
+        <span>{contact.location}</span>
+      </address>
+      <p class="footer-hours">Sun–Thu 9:00–21:00 · Fri 14:00–21:00 · Sat 10:00–15:00</p>
+    </div>
+  </div>
+
+  <div class="container site-footer__bottom">
+    <span>© {year} Al-Ramk. All rights reserved.</span>
+    <span>Endurance race timing &amp; management</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-top: clamp(4rem, 7vw, 6.5rem);
+    color: #ded5ca;
+    background: #241e19 url('/textures/topo.svg') center / cover;
+  }
+  .site-footer__inner {
+    display: grid;
+    grid-template-columns: 1.7fr 0.8fr 1fr 1fr;
+    gap: clamp(30px, 5vw, 70px);
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+  }
+  .site-footer__brand p {
+    max-width: 330px;
+    margin: 22px 0 28px;
+    color: #ded5ca;
+    font-size: 0.94rem;
+  }
+  .footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 13px;
+  }
+  .footer-brand img {
+    width: 46px;
+    height: 46px;
+    border-radius: 4px;
+    background: #fff;
+    object-fit: cover;
+  }
+  .footer-brand span {
+    color: #f3ede4;
+    font-family: 'Cinzel Variable', serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .footer-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    color: #f3ede4;
+    font-family: 'Cinzel Variable', serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  .footer-title svg { color: #c79c65; opacity: 0.9; }
+  .site-footer__col ul {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .site-footer__col a,
+  .site-footer__col address span,
+  .site-footer__col address a {
+    color: #c9c0b6;
+    font-size: 0.9rem;
+  }
+  .site-footer__col a:hover {
+    color: #c79c65;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .site-footer__contact address {
+    display: grid;
+    gap: 5px;
+    margin-bottom: 16px;
+    font-style: normal;
+  }
+  .footer-hours {
+    max-width: 230px;
+    margin: 0;
+    color: #a79d92;
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+  .site-footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding-block: 22px;
+    border-top: 1px solid rgba(199, 156, 101, 0.28);
+    color: #a79d92;
+    font-size: 0.76rem;
+  }
+
+  @media (max-width: 980px) {
+    .site-footer__inner {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 620px) {
+    .site-footer__inner {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    .site-footer__bottom {
+      flex-direction: column;
+      gap: 4px;
+    }
+  }
+</style>

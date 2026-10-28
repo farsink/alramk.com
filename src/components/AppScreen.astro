@@ -1,0 +1,30 @@
+---
+import { Image } from 'astro:assets';
+import { images, type ImageKey } from '../data/media';
+
+interface Props {
+  imageKey: ImageKey;
+  title: string;
+  caption: string;
+  alt: string;
+  theme?: 'dark' | 'light';
+  eager?: boolean;
+}
+
+const { imageKey, title, caption, alt, theme = 'dark', eager = false } = Astro.props;
+const image = images[imageKey];
+---
+
+<figure class:list={['app-screen', theme === 'light' && 'app-screen--light']} data-reveal>
+  <div class="app-screen__phone">
+    <Image
+      src={image}
+      alt={alt}
+      widths={[260, 380, 520]}
+      sizes="(max-width: 680px) 78vw, 290px"
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+  </div>
+  <figcaption><strong>{title}</strong> — {caption}</figcaption>
+</figure>

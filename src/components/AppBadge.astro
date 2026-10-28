@@ -1,0 +1,37 @@
+---
+import { appLinks } from '../data/site';
+
+interface Props {
+  store: 'play' | 'apple';
+}
+
+const { store } = Astro.props;
+const isPlay = store === 'play';
+const href = isPlay ? appLinks.play : appLinks.apple;
+const label = isPlay ? 'Get Al-Ramk on Google Play' : 'Download Al-Ramk on the App Store';
+---
+
+<a
+  class="app-badge"
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={`${label} (opens in a new tab)`}
+>
+  {isPlay ? (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M3.6 2.2c-.3.3-.5.8-.5 1.4v16.8c0 .6.2 1.1.5 1.4l.1.1 9.4-9.4v-.2L3.7 2.1l-.1.1z" opacity=".9"/>
+      <path d="m16.5 15.8-3.3-3.3v-.2l3.3-3.3.1.1 3.9 2.2c1.1.6 1.1 1.7 0 2.3l-4 2.2z" opacity=".75"/>
+      <path d="m16.6 15.7-3.4-3.4-9.6 9.6c.4.4 1 .4 1.7.1l11.3-6.3" opacity=".65"/>
+      <path d="M16.6 8.3 5.3 2c-.7-.4-1.3-.3-1.7.1l9.6 9.6 3.4-3.4z" opacity=".85"/>
+    </svg>
+  ) : (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M17.05 12.54c-.03-2.5 2.04-3.7 2.13-3.76-1.16-1.7-2.97-1.93-3.61-1.96-1.54-.16-3 .9-3.78.9-.78 0-1.98-.88-3.26-.85-1.68.03-3.23.98-4.1 2.48-1.75 3.03-.45 7.52 1.26 9.98.83 1.2 1.82 2.55 3.12 2.5 1.25-.05 1.72-.8 3.23-.8 1.5 0 1.93.8 3.25.78 1.34-.02 2.19-1.22 3.01-2.43.95-1.39 1.34-2.74 1.36-2.81-.03-.01-2.61-1-2.64-4.03zM14.55 5.1c.69-.83 1.15-1.99 1.02-3.14-.99.04-2.18.66-2.89 1.49-.64.74-1.2 1.92-1.05 3.05 1.1.09 2.23-.56 2.92-1.4z"/>
+    </svg>
+  )}
+  <span class="app-badge__copy">
+    <small>{isPlay ? 'Get it on' : 'Download on the'}</small>
+    <strong>{isPlay ? 'Google Play' : 'App Store'}</strong>
+  </span>
+</a>

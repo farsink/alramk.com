@@ -1,0 +1,913 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import AppScreen from '../components/AppScreen.astro';
+import AppBadge from '../components/AppBadge.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import Button from '../components/Button.astro';
+import { features, homeSteps, roles, faqs, stats, contact } from '../data/site';
+import { images } from '../data/media';
+
+const galleryImages = [images.heroEndurance, images.gps, images.ubidium, images.transponder, images.heart, images.printing];
+const galleryAlts = ['Endurance horse running across desert terrain', 'GPS tracking device and phone showing route data', 'Ubidium race timing device', 'Al-Ramk active transponder', 'Heart-rate monitoring equipment', 'Al-Ramk printed race report'];
+---
+
+<BaseLayout
+  title="Al-Ramk — Endurance Race Timing & Management"
+  description="Ubidium timing, Active Transponder 3D, heart-rate monitoring, GPS tracking, and live results — one connected race-management system for endurance horse racing."
+>
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__media">
+        <div class="hero__orbit" aria-hidden="true"></div>
+        <div class="hero__disc" aria-hidden="true">
+          <Image
+            src={images.darkTexture}
+            alt=""
+            widths={[420, 700, 900]}
+            sizes="(max-width: 980px) 88vw, 42vw"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+        <Image
+          class="hero__horse"
+          src={images.heroCutout}
+          alt="Endurance racehorses and jockeys galloping shoulder to shoulder"
+          widths={[460, 680, 920, 1093]}
+          sizes="(max-width: 980px) 88vw, 44vw"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          data-parallax="0.02"
+        />
+      </div>
+
+      <div class="hero__content">
+        <span class="eyebrow" data-reveal>
+          <Icon name="horse" size={20} />
+          Endurance race management
+        </span>
+        <h1 data-reveal style="--reveal-delay:80ms">Horse race management, engineered for precision.</h1>
+        <p class="hero__lead" data-reveal style="--reveal-delay:160ms">
+          From Ubidium timing hardware to live results and veterinary insight, Al-Ramk gives organizers one connected system for every gate, loop, and finish.
+        </p>
+        <div class="button-row hero__actions" data-reveal style="--reveal-delay:240ms">
+          <Button href="/contact/">Request a Demo</Button>
+          <Button href="/features/" variant="secondary">Explore the System</Button>
+        </div>
+
+        <div class="hero-stats" data-reveal style="--reveal-delay:320ms">
+          {stats.map((stat) => (
+            <div class="hero-stat">
+              <strong>{stat.value}</strong>
+              <span>{stat.label}</span>
+            </div>
+          ))}
+        </div>
+
+        <ul class="hero-chips" data-reveal style="--reveal-delay:380ms">
+          <li>Ubidium timing</li>
+          <li>Active Transponder 3D</li>
+          <li>Heart-rate monitoring</li>
+          <li>Live mobile results</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-label="Al-Ramk capabilities">
+    <div class="marquee__track">
+      {[false, true].map((hidden) => (
+        <ul class="marquee__list" aria-hidden={hidden ? 'true' : undefined}>
+          {features.map((feature) => (
+            <li>
+              <a href={`/features/#${feature.id}`}>{feature.title} <span aria-hidden="true">↗</span></a>
+              <span class="marquee__star" aria-hidden="true">★</span>
+            </li>
+          ))}
+        </ul>
+      ))}
+    </div>
+  </div>
+
+  <section class="section role-strip">
+    <div class="container">
+      <div class="role-strip__head">
+        <SectionHeading
+          eyebrow="A connected race day"
+          title="One race day. Every team connected."
+          lead="The same race record follows the horse from inspection to the final standings — for the people running the race and the people following it."
+        />
+        <p class="founder-chip" data-reveal>
+          <img src="/favicon-512.png" alt="" width="54" height="54" loading="lazy" />
+          <span class="founder-chip__text">
+            <strong>{contact.name}</strong>
+            <span>{contact.role}</span>
+          </span>
+        </p>
+      </div>
+      <div class="role-strip__grid">
+        {roles.slice(0, 3).map((role, index) => (
+          <article class="role" data-reveal style={`--reveal-delay:${index * 80}ms`}>
+            <Icon name={role.icon} size={40} class="role__icon" />
+            <h3>{role.title}</h3>
+            <p>{role.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-photo">
+    <Image
+      src={images.groupRide}
+      alt="Group of riders galloping together on horseback along the shore"
+      widths={[800, 1200, 1440]}
+      sizes="100vw"
+      loading="lazy"
+      decoding="async"
+      data-parallax="0.04"
+    />
+  </section>
+
+  <section class="section process">
+    <div class="container process__inner">
+      <div class="process__intro" data-reveal>
+        <SectionHeading
+          eyebrow="What we deliver"
+          title="A complete stack for modern endurance racing"
+          lead="Precision timing hardware, live reporting, veterinary tools, and participant insight — engineered to work together, out of the box."
+        />
+        <a class="text-link" href="/features/">All capabilities <span aria-hidden="true">↗</span></a>
+      </div>
+
+      <div class="process__grid">
+        {features.map((feature, index) => (
+          <a class="process-card" href={`/features/#${feature.id}`} data-reveal style={`--reveal-delay:${(index % 2) * 80}ms`}>
+            <Icon name={feature.icon} size={40} class="process-card__icon" />
+            <h3>{feature.title}</h3>
+            <p>{feature.short}</p>
+            <span class="text-link">Explore <span aria-hidden="true">↗</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section steps-section">
+    <div class="container">
+      <div class="section-heading-row">
+        <SectionHeading
+          eyebrow="From start to finish"
+          title="Built around the endurance race day"
+          lead="Timing points, veterinary holds, and live results are one continuous workflow — not four disconnected systems."
+        />
+        <a class="text-link" href="/how-it-works/">See the workflow <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="step-rows">
+        {homeSteps.map((step, index) => (
+          <a class="step-row" href="/how-it-works/" data-reveal style={`--reveal-delay:${index * 70}ms`}>
+            <span class="step-row__number" aria-hidden="true">{step.number}</span>
+            <span class="step-row__body">
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </span>
+            <span class="step-row__arrow" aria-hidden="true">
+              <Icon name="arrow" size={22} />
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section dark app-band">
+    <div class="container app-band__inner">
+      <div class="app-band__head">
+        <span class="eyebrow">
+          <Icon name="horse" size={20} />
+          The race in your pocket
+        </span>
+        <h2>Follow every loop, wherever you are.</h2>
+        <p>
+          The Al-Ramk app brings upcoming races, live rider positions, gate-by-gate performance, and final standings to riders, owners, and fans.
+        </p>
+      </div>
+
+      <div class="phone-gallery">
+        <AppScreen
+          imageKey="races"
+          title="Races"
+          caption="Upcoming and finished races, with search and filter."
+          alt="Al-Ramk app Races screen listing a finished endurance race"
+        />
+        <AppScreen
+          imageKey="final"
+          title="Final"
+          caption="Position, loop, rider and horse, status, arrival, and average speed."
+          alt="Al-Ramk app final standings table with rider, horse, status, arrival, and average speed"
+        />
+        <AppScreen
+          imageKey="summary"
+          title="Summary"
+          caption="Eliminated, finished, ready, and on-loop counts at a glance."
+          alt="Al-Ramk app summary screen with status cards and two pie charts"
+        />
+      </div>
+
+      <div class="app-band__actions">
+        <div class="app-badges">
+          <AppBadge store="play" />
+          <AppBadge store="apple" />
+        </div>
+        <a class="text-link text-link--light" href="/features/#app">Explore the app <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream why-section">
+    <div class="container why-section__inner">
+      <div class="why-media" data-reveal>
+        <Image
+          class="why-media__horse"
+          src={images.gps}
+          alt="GPS tracking device and phone showing a route on the map"
+          widths={[400, 700, 1120]}
+          sizes="(max-width: 980px) 70vw, 32vw"
+          loading="lazy"
+          decoding="async"
+          data-parallax="0.03"
+        />
+      </div>
+
+      <div class="why-content">
+        <SectionHeading
+          eyebrow="Why Al-Ramk"
+          title="One team behind the timing, the software, and the results."
+          lead="Al-Ramk builds the hardware and the software, so organizers work with one partner from gate setup to official results."
+        />
+        <div class="why-list">
+          <div class="why-item" data-reveal>
+            <Icon name="loop" size={38} class="why-item__icon" />
+            <div>
+              <h3>Endurance-specific workflow</h3>
+              <p>Loops, vet gates, hold times, and recovery are built into the race record.</p>
+            </div>
+          </div>
+          <div class="why-item" data-reveal style="--reveal-delay:80ms">
+            <Icon name="transponder" size={38} class="why-item__icon" />
+            <div>
+              <h3>One connected system</h3>
+              <p>Timing, heart rate, GPS, reporting, and the app work as one stack.</p>
+            </div>
+          </div>
+          <div class="why-item" data-reveal style="--reveal-delay:160ms">
+            <Icon name="chart" size={38} class="why-item__icon" />
+            <div>
+              <h3>Results people can see</h3>
+              <p>Officials, riders, owners, and fans follow the same published race record.</p>
+            </div>
+          </div>
+        </div>
+        <Button href="/about/" variant="secondary">Meet Al-Ramk</Button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-heading-row">
+        <SectionHeading
+          eyebrow="From the course"
+          title="Race-day technology, up close."
+          lead="From course tracking to the timing hardware and reports that keep every gate connected."
+        />
+      </div>
+      <div class="gallery" role="region" aria-label="Race-day technology and imagery">
+        {galleryImages.map((image, index) => (
+          <figure class="gallery__item" data-reveal style={`--reveal-delay:${index * 50}ms`}>
+            <Image
+              src={image}
+              alt={galleryAlts[index]}
+              widths={[240, 360, 480]}
+              sizes="(max-width: 680px) 50vw, 16vw"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section faq-section">
+    <div class="container faq-section__inner">
+      <div class="faq-copy" data-reveal>
+        <span class="eyebrow">
+          <Icon name="horse" size={20} />
+          Ask a question
+        </span>
+        <h2>Frequently asked questions</h2>
+        <p>What organizers ask before a first race with Al-Ramk.</p>
+        <Button href="/contact/" variant="secondary">Contact Us</Button>
+      </div>
+      <Faq items={faqs} />
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background: #f3ede4;
+  }
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+    gap: clamp(28px, 5vw, 74px);
+    align-items: end;
+    min-height: 800px;
+    padding-top: clamp(36px, 5vw, 64px);
+  }
+  .hero__media {
+    position: relative;
+    z-index: 1;
+    align-self: end;
+    aspect-ratio: 1.04;
+    max-width: 760px;
+    margin-left: clamp(-100px, -7vw, -30px);
+  }
+  .hero__orbit {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 76%;
+    aspect-ratio: 1;
+    border: 1px solid rgba(199, 156, 101, 0.55);
+    border-radius: 50%;
+    transform: translate(-7%, -6%) scale(1.05);
+  }
+  .hero__disc {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 76%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    transform: translate(-7%, -6%);
+  }
+  .hero__disc::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(26, 20, 15, 0.28);
+  }
+  .hero__disc :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hero__horse {
+    position: absolute;
+    bottom: 0;
+    left: 2%;
+    z-index: 2;
+    width: 94%;
+    height: auto;
+    filter: drop-shadow(0 30px 50px rgba(36, 30, 25, 0.22));
+  }
+  .hero__content {
+    position: relative;
+    z-index: 2;
+    padding-block: clamp(30px, 5vw, 60px) clamp(40px, 6vw, 70px);
+  }
+  .hero__content h1 {
+    max-width: 650px;
+    margin-bottom: 22px;
+  }
+  .hero__lead {
+    max-width: 560px;
+    margin-bottom: 30px;
+    font-size: clamp(1rem, 1.5vw, 1.12rem);
+  }
+  .hero__actions {
+    margin-bottom: 40px;
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 540px;
+    border-top: 1px solid rgba(74, 63, 53, 0.22);
+    border-left: 1px solid rgba(74, 63, 53, 0.22);
+  }
+  .hero-stat {
+    padding: 18px 20px;
+    border-right: 1px solid rgba(74, 63, 53, 0.22);
+    border-bottom: 1px solid rgba(74, 63, 53, 0.22);
+  }
+  .hero-stat strong {
+    display: block;
+    color: #4a3f35;
+    font-family: 'Cinzel Variable', serif;
+    font-size: clamp(1.3rem, 2.1vw, 1.75rem);
+    font-weight: 500;
+    line-height: 1.1;
+  }
+  .hero-stat span {
+    display: block;
+    margin-top: 4px;
+    color: #5e5751;
+    font-size: 0.78rem;
+  }
+  .hero-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin: 22px 0 0;
+    padding: 0;
+    color: #775925;
+    font-size: 0.73rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    list-style: none;
+    text-transform: uppercase;
+  }
+  .hero-chips li {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .hero-chips li::before {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #c79c65;
+    content: '';
+  }
+
+  .marquee {
+    overflow: hidden;
+    border-block: 1px solid var(--line);
+    background: var(--cream-100);
+  }
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    animation: marquee 40s linear infinite;
+  }
+  .marquee__list {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 20px 0;
+    list-style: none;
+  }
+  .marquee__list li {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+  .marquee__list a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding-inline: 26px;
+    color: var(--espresso-900);
+    font-family: 'Cinzel Variable', serif;
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  .marquee__list a span {
+    color: var(--gold-700);
+  }
+  .marquee__list a:hover {
+    color: var(--gold-700);
+  }
+  .marquee__star {
+    padding-inline: 6px;
+    color: var(--espresso-900);
+    font-size: 0.8rem;
+  }
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+
+  .feature-photo {
+    line-height: 0;
+  }
+  .feature-photo img {
+    width: 100%;
+    height: clamp(320px, 56vh, 560px);
+    object-fit: cover;
+  }
+
+  .section-heading-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+  .section-heading-row :global(.section-heading) {
+    margin-bottom: 0;
+  }
+  .section-heading-row > .text-link {
+    flex: 0 0 auto;
+    padding-bottom: 8px;
+  }
+
+  .role-strip__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+  .role-strip__head :global(.section-heading) {
+    margin-bottom: 0;
+  }
+  .founder-chip {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 14px;
+    margin: 0;
+    padding-bottom: 6px;
+  }
+  .founder-chip img {
+    width: 54px;
+    height: 54px;
+    border: 1px solid var(--gold-500);
+    border-radius: 50%;
+  }
+  .founder-chip strong {
+    display: block;
+    font-size: 0.95rem;
+  }
+  .founder-chip span {
+    display: block;
+    color: var(--gold-700);
+    font-size: 0.76rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .role-strip__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-block: 1px solid var(--line);
+  }
+  .role {
+    padding: 38px 34px;
+    border-right: 1px solid var(--line);
+  }
+  .role:last-child {
+    border-right: 0;
+  }
+  .role__icon {
+    margin-bottom: 26px;
+    color: var(--gold-700);
+  }
+  .role h3 {
+    margin-bottom: 11px;
+    font-size: 1.32rem;
+  }
+  .role p {
+    margin: 0;
+    font-size: 0.94rem;
+  }
+
+  .process__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(40px, 6vw, 90px);
+    align-items: start;
+  }
+  .process__intro {
+    position: sticky;
+    top: 110px;
+  }
+  .process__intro :global(.section-heading) {
+    margin-bottom: 26px;
+  }
+  .process__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+  .process-card {
+    display: block;
+    padding: 34px 30px 30px;
+    border: 1px solid var(--line);
+    background: var(--cream-50);
+    transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s var(--ease);
+  }
+  .process-card:hover {
+    border-color: var(--gold-500);
+    box-shadow: 0 18px 38px rgba(36, 30, 25, 0.12);
+    transform: translateY(-5px);
+  }
+  .process-card__icon {
+    color: var(--gold-700);
+  }
+  .process-card h3 {
+    margin: 20px 0 8px;
+    font-size: 1.28rem;
+  }
+  .process-card p {
+    margin: 0 0 14px;
+    font-size: 0.93rem;
+  }
+
+  .step-rows {
+    display: grid;
+    gap: 16px;
+  }
+  .step-row {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr) 48px;
+    align-items: center;
+    gap: 26px;
+    padding: 26px 34px;
+    border: 1px solid var(--line);
+    background: var(--cream-50);
+    transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s var(--ease);
+  }
+  .step-row:hover {
+    border-color: var(--gold-500);
+    box-shadow: 0 18px 38px rgba(36, 30, 25, 0.12);
+    transform: translateY(-4px);
+  }
+  .step-row__number {
+    color: var(--gold-700);
+    font-family: 'Cinzel Variable', serif;
+    font-size: 2rem;
+    font-weight: 500;
+  }
+  .step-row__body h3 {
+    margin-bottom: 6px;
+    font-size: 1.22rem;
+  }
+  .step-row__body p {
+    margin: 0;
+    font-size: 0.93rem;
+  }
+  .step-row__arrow {
+    color: var(--gold-700);
+    justify-self: end;
+  }
+
+  .app-band {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .app-band__inner {
+    position: relative;
+  }
+  .app-band__head {
+    max-width: 760px;
+    margin: 0 auto clamp(2.5rem, 5vw, 4rem);
+    text-align: center;
+  }
+  .app-band__head h2 {
+    margin-bottom: 18px;
+  }
+  .app-band__head p {
+    margin: 0 auto;
+    max-width: 640px;
+  }
+  .app-band__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 24px 40px;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+  .text-link--light {
+    color: #c79c65;
+  }
+
+  .why-section__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(40px, 7vw, 90px);
+    align-items: center;
+  }
+  .why-media {
+    position: relative;
+    min-height: 420px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--gold-500);
+    background: var(--cream-100);
+  }
+  .why-media::before { content: ''; position: absolute; inset: 18px; border: 1px solid rgba(199,156,101,.5); border-radius: 50%; }
+  .why-media__horse {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    margin-inline: auto;
+    filter: drop-shadow(0 24px 40px rgba(36, 30, 25, 0.18));
+  }
+  .why-content :global(.section-heading) {
+    margin-bottom: 32px;
+  }
+  .why-list {
+    display: grid;
+    margin-bottom: 34px;
+    border-top: 1px solid var(--line);
+  }
+  .why-item {
+    display: grid;
+    grid-template-columns: 54px 1fr;
+    gap: 20px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .why-item__icon {
+    color: var(--gold-700);
+  }
+  .why-item h3 {
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+  }
+  .why-item p {
+    margin: 0;
+    font-size: 0.92rem;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .gallery__item {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    aspect-ratio: 1 / 1.12;
+    background: var(--cream-100);
+  }
+  .gallery__item :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .7s var(--ease);
+  }
+  .gallery__item:hover :global(img) {
+    transform: scale(1.06);
+  }
+
+  .faq-section__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+    gap: clamp(40px, 7vw, 100px);
+    align-items: start;
+  }
+  .faq-copy {
+    position: relative;
+    padding-top: 8px;
+  }
+  .faq-copy h2 {
+    margin-bottom: 16px;
+  }
+  .faq-copy p {
+    max-width: 360px;
+    margin-bottom: 28px;
+  }
+
+  @media (max-width: 1120px) {
+    .hero__inner {
+      min-height: 700px;
+    }
+  }
+
+  @media (max-width: 980px) {
+    .hero__inner {
+      grid-template-columns: 1fr;
+      min-height: 0;
+      padding-top: 48px;
+      padding-bottom: 0;
+    }
+    .hero__content {
+      order: -1;
+      padding-bottom: 10px;
+    }
+    .hero__media {
+      order: 1;
+      max-width: 560px;
+      margin-inline: auto;
+    }
+    .role-strip__head {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .role-strip__grid {
+      grid-template-columns: 1fr;
+    }
+    .role {
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .role:last-child {
+      border-bottom: 0;
+    }
+    .process__inner {
+      grid-template-columns: 1fr;
+    }
+    .process__intro {
+      position: static;
+    }
+    .why-section__inner {
+      grid-template-columns: 1fr;
+    }
+    .why-media {
+      min-height: 0;
+    }
+    .gallery {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .faq-section__inner {
+      grid-template-columns: 1fr;
+      gap: 34px;
+    }
+    .faq-copy p {
+      max-width: 520px;
+    }
+    .section-heading-row {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 18px;
+    }
+  }
+
+  @media (max-width: 680px) {
+    .hero__content h1 {
+      font-size: clamp(2.35rem, 10vw, 3.1rem);
+    }
+    .hero-stats {
+      grid-template-columns: 1fr 1fr;
+    }
+    .hero-stat {
+      padding: 15px 14px;
+    }
+    .hero-chips {
+      font-size: 0.67rem;
+    }
+    .marquee__list a {
+      padding-inline: 18px;
+    }
+    .feature-photo img {
+      height: 240px;
+    }
+    .process__grid {
+      grid-template-columns: 1fr;
+    }
+    .step-row {
+      grid-template-columns: 56px minmax(0, 1fr);
+      gap: 16px;
+      padding: 20px;
+    }
+    .step-row__number {
+      font-size: 1.4rem;
+    }
+    .step-row__arrow {
+      display: none;
+    }
+    .gallery {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .why-media__horse {
+      max-width: 380px;
+    }
+    .why-item {
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__track {
+      animation: none;
+    }
+  }
+</style>

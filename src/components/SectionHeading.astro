@@ -1,0 +1,26 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  align?: 'left' | 'center';
+  as?: 'h1' | 'h2';
+  id?: string;
+}
+
+const { eyebrow, title, lead, align = 'left', as = 'h2', id } = Astro.props;
+const Tag = as;
+---
+
+<div class:list={['section-heading', align === 'center' && 'section-heading--center']}>
+  {eyebrow && (
+    <span class="eyebrow">
+      <Icon name="horse" size={20} />
+      {eyebrow}
+    </span>
+  )}
+  <Tag id={id}>{title}</Tag>
+  {lead && <p>{lead}</p>}
+</div>

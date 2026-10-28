@@ -1,0 +1,61 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Icon from '../components/Icon.astro';
+import Button from '../components/Button.astro';
+import { team, principles, stats } from '../data/site';
+import { images } from '../data/media';
+---
+
+<BaseLayout title="About Al-Ramk | Endurance Racing Technology" description="Meet the people and mission behind Al-Ramk endurance racing technology." currentPath="/about/">
+  <PageHero eyebrow="Who we are" title="Built around the demands of endurance racing." lead="The people, technology, and mission behind Al-Ramk." asideTitle="Built around the race" asideText="Hardware, software, and real-time reporting for endurance racing." />
+  <section class="section story-section">
+    <div class="container story-grid">
+      <div class="story-collage" role="group" aria-label="Al-Ramk race and technology photography">
+        <Image src={images.heroEndurance} alt="An endurance horse running across desert terrain" widths={[300,500,700]} sizes="(max-width:680px) 65vw, 28vw" loading="lazy" />
+        <Image src={images.ubidium} alt="Ubidium endurance race timing device" widths={[250,400,600]} sizes="(max-width:680px) 48vw, 20vw" loading="lazy" />
+        <Image src={images.gps} alt="GPS tracking device and phone displaying a race route" widths={[250,400,600]} sizes="(max-width:680px) 48vw, 20vw" loading="lazy" />
+        <span aria-hidden="true"></span>
+      </div>
+      <div>
+        <SectionHeading eyebrow="Our story" title="Technology shaped by race day." lead="Al-Ramk develops software and hardware for timing and race operations in endurance racing." />
+        <p>The Al-Ramk system brings timing hardware, transponders, veterinary tools, and real-time reporting together. Al-Ramk Software, Ubidium, and Active Transponder 3D support the demands of modern endurance racing.</p>
+        <p>Each season brings new courses, new challenges, and new opportunities to make race-day information clearer for organizers, judges, riders, and the people following along.</p>
+        <Button href="/features/" variant="secondary">Explore the System</Button>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-stats section--compact" aria-label="Al-Ramk capabilities">
+    <div class="container">{stats.map((stat) => <div><strong>{stat.value}</strong><span>{stat.label}</span></div>)}</div>
+  </section>
+
+  <section class="section section--cream">
+    <div class="container"><SectionHeading eyebrow="Our direction" title="A clear purpose for every race." />
+      <div class="mission-grid">
+        <article><span>01</span><h2>Our Mission</h2><p>Empower horse-racing organizers with state-of-the-art management tools that support accurate, timely race results.</p></article>
+        <article><span>02</span><h2>Our Vision</h2><p>Become a leading provider of horse-race management solutions, recognized for innovation and outstanding customer support.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section team-section">
+    <div class="container"><SectionHeading eyebrow="The people behind Al-Ramk" title="A team focused on the sport." lead="The company’s published team brings engineering and race operations together." align="center" />
+      <div class="team-grid">{team.map((person) => <article><span>{person.initials}</span><h3>{person.name}</h3><p>{person.role}</p></article>)}</div>
+    </div>
+  </section>
+
+  <section class="section section--cream">
+    <div class="container"><SectionHeading eyebrow="How we work" title="Made for the whole race-day picture." />
+      <div class="principle-grid">{principles.map((principle) => <article><Icon name={principle.icon} size={38} /><h3>{principle.title}</h3><p>{principle.text}</p></article>)}</div>
+    </div>
+  </section>
+  <CtaBand title="Let's plan your next event." text="Talk with the Al-Ramk team about what your race needs." label="Get in Touch" />
+</BaseLayout>
+
+<style>
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(3rem,7vw,7rem);align-items:center}.story-grid>div:last-child>p{font-size:1rem}.about-stats{padding-block:32px;background:var(--espresso-900);color:var(--cream-50)}.about-stats>.container{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}.about-stats>.container>div{display:grid;gap:4px;padding:10px 18px;border-right:1px solid #594f47}.about-stats>.container>div:first-child{padding-left:0}.about-stats>.container>div:last-child{border:0}.about-stats strong{color:var(--gold-500);font-family:'Cinzel Variable',serif;font-size:1.55rem}.about-stats span{color:#ded5ca;font-size:.78rem}.story-collage{position:relative;display:grid;grid-template-columns:1.25fr .9fr;grid-template-rows:1fr 1fr;gap:14px;min-height:500px;padding:12px}.story-collage>img{width:100%;height:100%;object-fit:cover}.story-collage>img:first-child{grid-row:span 2;object-fit:cover}.story-collage>img:nth-child(2){object-fit:cover}.story-collage>span{position:absolute;z-index:-1;inset:0 18px 18px 0;border:1px solid var(--gold-500)}.mission-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.mission-grid article{position:relative;min-height:250px;padding:38px;border:1px solid var(--line);background:var(--cream-50);clip-path:polygon(0 0,calc(100% - 24px) 0,100% 24px,100% 100%,0 100%)}.mission-grid article>span{color:var(--gold-700);font-family:'Cinzel Variable',serif;font-size:2.7rem;opacity:.7}.mission-grid h2{margin:22px 0 10px;font-size:1.6rem}.mission-grid p{max-width:530px}.team-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.team-grid article{padding:32px;border:1px solid var(--line);text-align:center;background:var(--cream-50)}.team-grid article>span{display:grid;width:68px;height:68px;margin:0 auto 20px;place-items:center;border:1px solid var(--gold-500);border-radius:50%;color:var(--espresso-700);background:var(--cream-100);font-family:'Cinzel Variable',serif;font-size:1.2rem}.team-grid h3{font-size:1.15rem}.team-grid p{margin:0;font-size:.88rem}.principle-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-block:1px solid var(--line)}.principle-grid article{padding:30px 28px 20px 0;border-right:1px solid var(--line)}.principle-grid article:not(:first-child){padding-left:28px}.principle-grid article:last-child{border:0}.principle-grid svg{margin-bottom:30px;color:var(--gold-700)}.principle-grid h3{font-size:1.25rem}.principle-grid p{font-size:.92rem}@media(max-width:980px){.story-grid{grid-template-columns:1fr}.story-collage{min-height:440px}.principle-grid{grid-template-columns:1fr}.principle-grid article,.principle-grid article:not(:first-child){padding:24px 0;border-right:0;border-bottom:1px solid var(--line)}.principle-grid article:last-child{border-bottom:0}.principle-grid svg{margin-bottom:14px}}@media(max-width:680px){.story-collage{min-height:330px;gap:8px;padding:8px}.about-stats>.container{grid-template-columns:repeat(2,minmax(0,1fr))}.about-stats>.container>div{padding:12px;border-bottom:1px solid #594f47}.about-stats>.container>div:nth-child(2){border-right:0}.about-stats>.container>div:nth-child(3){padding-left:0;border-bottom:0}.about-stats>.container>div:last-child{border-bottom:0}.mission-grid,.team-grid{grid-template-columns:1fr}.mission-grid article{min-height:0;padding:28px}.team-grid article{padding:24px}}
+</style>

@@ -1,0 +1,32 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead?: string;
+  asideTitle?: string;
+  asideText?: string;
+}
+
+const { eyebrow, title, lead, asideTitle, asideText } = Astro.props;
+---
+
+<section class="page-hero">
+  <div class="container page-hero__inner">
+    <div>
+      <span class="eyebrow">
+        <Icon name="horse" size={20} />
+        {eyebrow}
+      </span>
+      <h1>{title}</h1>
+      {lead && <p>{lead}</p>}
+    </div>
+    {asideTitle && (
+      <aside class="page-hero__aside">
+        <strong>{asideTitle}</strong>
+        {asideText && <p>{asideText}</p>}
+      </aside>
+    )}
+  </div>
+</section>

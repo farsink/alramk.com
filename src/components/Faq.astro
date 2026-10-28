@@ -1,0 +1,17 @@
+---
+interface Props {
+  items: readonly { q: string; a: string }[];
+  theme?: 'light' | 'dark';
+}
+
+const { items, theme = 'light' } = Astro.props;
+---
+
+<div class:list={['faq-list', theme === 'dark' && 'faq-list--dark']}>
+  {items.map((item, index) => (
+    <details data-reveal style={`--reveal-delay:${index * 60}ms`}>
+      <summary>{item.q}</summary>
+      <p>{item.a}</p>
+    </details>
+  ))}
+</div>

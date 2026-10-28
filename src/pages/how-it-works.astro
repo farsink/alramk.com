@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import CtaBand from '../components/CtaBand.astro';
+import CourseMap from '../components/CourseMap.astro';
+import Icon from '../components/Icon.astro';
+import { workflowSteps, roles, dataFlow } from '../data/site';
+import { images } from '../data/media';
+import { Image } from 'astro:assets';
+---
+
+<BaseLayout title="How Endurance Race Timing Works | Al-Ramk" description="See how endurance race timing moves from entries and loop setup through vet gates, recovery, finish, and published results." currentPath="/how-it-works/">
+  <PageHero eyebrow="Race-day workflow" title="From the first entry to the official result." lead="A race-day workflow built for loops, vet gates, and the people who keep them moving." asideTitle="Race day, connected" asideText="Typical endurance-race stages shown alongside the Al-Ramk tools that support them." />
+  <section class="section workflow-section">
+    <div class="container workflow-layout">
+      <div class="workflow-sticky" data-reveal>
+        <Image src={images.heroEndurance} alt="An endurance horse running across desert terrain" widths={[400, 700, 900]} sizes="(max-width: 980px) 100vw, 38vw" loading="lazy" />
+        <div><span>01 — 06</span><strong>Race-day workflow</strong><p>From entries and setup to results people can follow.</p></div>
+      </div>
+      <ol class="workflow-list">
+        {workflowSteps.map((step) => <li data-reveal style={`--reveal-delay:${Number(step.number) * 35}ms`}>
+          <span class="workflow-list__number">{step.number}</span>
+          <div><h2>{step.title}</h2><div class="workflow-list__details"><p><strong>What happens</strong>{step.happens}</p><p><strong>Al-Ramk in the workflow</strong>{step.does}</p></div></div>
+        </li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--cream">
+    <div class="container">
+      <SectionHeading eyebrow="Loops and gates" title="A race course, at a glance." lead="Every event is different. Loops, timing points, and vet gates are configured for the race." align="center" />
+      <CourseMap />
+    </div>
+  </section>
+
+  <section class="section roles-section">
+    <div class="container"><SectionHeading eyebrow="One system, different views" title="The right race-day information for every role." />
+      <div class="roles-grid">{roles.map((role) => <article><Icon name={role.icon} size={34} /><h3>{role.title}</h3><p>{role.text}</p></article>)}</div>
+    </div>
+  </section>
+
+  <section class="section section--cream">
+    <div class="container data-flow">
+      <div><SectionHeading eyebrow="Inside the app" title="The race, from four useful views." lead="The Al-Ramk app organizes race details and results into focused screens." /></div>
+      <div class="data-flow__list">{dataFlow.map((item,index) => <article><span>0{index + 1}</span><div><h3>{item.tab}</h3><p>{item.text}</p></div></article>)}</div>
+    </div>
+  </section>
+  <CtaBand title="Plan a race-day setup with Al-Ramk." text="Talk with the team about your timing points, vet-gate workflow, and reporting needs." />
+</BaseLayout>
+
+<style>
+.workflow-layout{display:grid;grid-template-columns:.72fr 1.28fr;gap:clamp(3rem,8vw,8rem);align-items:start}.workflow-sticky{position:sticky;top:calc(var(--header-height) + 24px);min-height:560px;background:var(--espresso-900)}.workflow-sticky>img{position:absolute;width:100%;height:100%;object-fit:cover;opacity:.72}.workflow-sticky>div{position:absolute;inset:auto 0 0;padding:30px;color:var(--cream-50);background:linear-gradient(transparent,rgba(36,30,25,.92))}.workflow-sticky span{display:block;margin-bottom:10px;color:var(--gold-500);font-size:.75rem;font-weight:700;letter-spacing:.18em}.workflow-sticky strong{font-family:'Cinzel Variable',serif;font-size:1.5rem}.workflow-sticky p{margin:8px 0 0;color:#ded5ca}.workflow-list{position:relative;display:grid;gap:0;margin:0;padding:0;list-style:none}.workflow-list::before{content:'';position:absolute;top:20px;bottom:20px;left:25px;width:1px;background:var(--gold-500)}.workflow-list li{position:relative;display:grid;grid-template-columns:52px 1fr;gap:24px;padding-bottom:42px}.workflow-list li:last-child{padding-bottom:0}.workflow-list__number{z-index:1;display:grid;width:52px;height:52px;place-items:center;border:1px solid var(--gold-500);color:var(--gold-700);background:var(--cream-50);font-family:'Cinzel Variable',serif;font-size:1.1rem}.workflow-list h2{margin:8px 0 18px;font-size:1.5rem}.workflow-list__details{display:grid;grid-template-columns:1fr 1fr;gap:24px}.workflow-list__details p{margin:0;font-size:.9rem}.workflow-list__details strong{display:block;margin-bottom:6px;color:var(--gold-700);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}.roles-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-block:1px solid var(--line)}.roles-grid article{padding:28px 22px 12px 0;border-right:1px solid var(--line)}.roles-grid article:not(:first-child){padding-left:22px}.roles-grid article:last-child{border:0}.roles-grid svg{margin-bottom:24px;color:var(--gold-700)}.roles-grid h3{font-size:1.2rem}.roles-grid p{font-size:.9rem}.data-flow{display:grid;grid-template-columns:.8fr 1.2fr;gap:70px;align-items:start}.data-flow__list{border-top:1px solid var(--line)}.data-flow__list article{display:grid;grid-template-columns:52px 1fr;gap:20px;padding:19px 0;border-bottom:1px solid var(--line)}.data-flow__list article>span{color:var(--gold-700);font-family:'Cinzel Variable',serif;font-size:1.6rem}.data-flow__list h3{margin:3px 0 5px;font-size:1.2rem}.data-flow__list p{margin:0;font-size:.92rem}@media(max-width:980px){.workflow-layout{grid-template-columns:1fr}.workflow-sticky{position:relative;top:auto;min-height:380px}.roles-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.roles-grid article:nth-child(2){border-right:0}.roles-grid article:nth-child(n+3){border-top:1px solid var(--line)}.roles-grid article:nth-child(3){padding-left:0}.data-flow{grid-template-columns:1fr;gap:20px}}@media(max-width:680px){.workflow-sticky{min-height:300px}.workflow-list li{grid-template-columns:40px 1fr;gap:15px}.workflow-list__number{width:40px;height:40px}.workflow-list::before{left:19px}.workflow-list h2{font-size:1.25rem;margin-top:4px}.workflow-list__details{grid-template-columns:1fr;gap:12px}.roles-grid{grid-template-columns:1fr}.roles-grid article,.roles-grid article:not(:first-child){padding:20px 0;border-right:0;border-bottom:1px solid var(--line)}.roles-grid article:last-child{border-bottom:0}.roles-grid svg{margin-bottom:10px}}
+
+</style>

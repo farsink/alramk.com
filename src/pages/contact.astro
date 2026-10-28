@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import AppBadge from '../components/AppBadge.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { contact, demoMailto } from '../data/site';
+---
+
+<BaseLayout title="Contact Al-Ramk | Request an Endurance Race Demo" description="Talk with Al-Ramk about endurance race timing, tracking, veterinary data, reporting, and the mobile app." currentPath="/contact/">
+  <PageHero eyebrow="Get in touch" title="Let's talk about your next event." lead="Reach out to discuss your event and race-day needs." asideTitle="Al-Ramk" asideText="Endurance race timing and management · Qatar" />
+  <section class="section contact-section">
+    <div class="container contact-grid">
+      <div class="contact-card contact-card--info">
+        <span class="eyebrow">Contact information</span>
+        <h2>Talk with the team.</h2>
+        <div class="contact-person"><span>JA</span><div><strong>{contact.name}</strong><small>{contact.role}</small></div></div>
+        <ul class="contact-list">
+          <li><Icon name="users" size={22} /><div><small>Email</small><a href={`mailto:${contact.email}`}>{contact.email}</a></div></li>
+          <li><Icon name="phone" size={22} /><div><small>Phone</small><a href={`tel:${contact.phoneHref}`}>{contact.phone}</a></div></li>
+          <li><Icon name="pin" size={22} /><div><small>Location</small><span>{contact.location}</span></div></li>
+          <li><Icon name="arrow" size={22} /><div><small>Website</small><span>alramk.com</span></div></li>
+        </ul>
+        <div class="hours-card"><h3>Working hours</h3>{contact.hours.map((hour) => <p><span>{hour.days}</span><span>{hour.time}</span></p>)}</div>
+      </div>
+      <div class="contact-card contact-card--demo">
+        <span class="eyebrow">Request a demo</span>
+        <h2>Tell us about your race.</h2>
+        <p>Share a few details so the team can prepare a useful conversation about your event.</p>
+        <ul class="demo-checklist">
+          <li><Icon name="check" size={18} /> Race date and venue</li>
+          <li><Icon name="check" size={18} /> Expected entries and loops</li>
+          <li><Icon name="check" size={18} /> Timing points and vet gates</li>
+          <li><Icon name="check" size={18} /> Timing, heart-rate, GPS, or app needs</li>
+        </ul>
+        <Button href={demoMailto}>Email a Demo Request</Button>
+        <p class="mailto-note">This opens your email app. No information is sent from this website.</p>
+        <a class="email-fallback" href={`mailto:${contact.email}`}>Or email {contact.email}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream app-download-section">
+    <div class="container app-download-grid">
+      <div><span class="eyebrow"><Icon name="phone" size={18} /> Al-Ramk mobile app</span><h2>Keep the race close.</h2><p>Check upcoming races, follow live positions and progress, then review finished results with rankings, timings, and performance summaries.</p></div>
+      <div class="app-badges"><AppBadge store="play" /><AppBadge store="apple" /></div>
+    </div>
+  </section>
+  <section class="section location-section"><div class="container location-note"><Icon name="pin" size={28} /><div><h2>Based in Qatar. Built for endurance racing.</h2><p>Contact the team to discuss event arrangements and race-day support.</p></div></div></section>
+  <CtaBand title="Planning an endurance race?" text="We’re ready to hear what you need from the first timing point to the final result." />
+</BaseLayout>
+
+<style>
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}.contact-card{padding:clamp(26px,4vw,44px);border:1px solid var(--line);background:var(--cream-50)}.contact-card h2{margin-bottom:20px;font-size:clamp(1.8rem,3vw,2.5rem)}.contact-card--info{background:var(--cream-100)}.contact-person{display:flex;align-items:center;gap:14px;padding:18px 0;border-block:1px solid var(--line)}.contact-person>span{display:grid;width:48px;height:48px;place-items:center;border:1px solid var(--gold-500);border-radius:50%;font-family:'Cinzel Variable',serif}.contact-person strong,.contact-person small{display:block}.contact-person small{color:var(--ink-600)}.contact-list{display:grid;gap:18px;margin:24px 0;padding:0;list-style:none}.contact-list li{display:flex;gap:14px;align-items:center}.contact-list li>svg{color:var(--gold-700)}.contact-list small{display:block;color:var(--gold-700);font-size:.7rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase}.contact-list a,.contact-list span{font-size:.95rem}.contact-list a:hover,.email-fallback:hover{color:var(--gold-700);text-decoration:underline}.hours-card{padding:20px;border:1px solid var(--line);background:var(--cream-50)}.hours-card h3{margin-bottom:12px;font-size:1.1rem}.hours-card p{display:flex;justify-content:space-between;gap:16px;margin:0;padding:9px 0;border-top:1px solid var(--line);font-size:.86rem}.demo-checklist{display:grid;gap:15px;margin:28px 0;padding:0;list-style:none}.demo-checklist li{display:flex;align-items:center;gap:12px}.demo-checklist svg{color:var(--gold-700)}.contact-card--demo .button{width:100%}.mailto-note{margin:15px 0 4px;font-size:.8rem}.email-fallback{font-size:.85rem;font-weight:600}.app-download-grid{display:flex;justify-content:space-between;align-items:center;gap:40px}.app-download-grid>div:first-child{max-width:640px}.app-download-grid h2{margin-bottom:12px}.app-download-grid p{margin:0}.location-note{display:flex;align-items:center;gap:20px;padding:26px;border-block:1px solid var(--line)}.location-note>svg{flex:0 0 auto;color:var(--gold-700)}.location-note h2{font-size:1.35rem}.location-note p{margin:0}@media(max-width:900px){.contact-grid{grid-template-columns:1fr}.app-download-grid{align-items:flex-start;flex-direction:column}}@media(max-width:680px){.contact-card{padding:24px 18px}.hours-card p{font-size:.76rem}.app-download-grid .app-badges{width:100%}.location-note{align-items:flex-start;padding-inline:0}.location-note h2{font-size:1.1rem}}
+</style>
